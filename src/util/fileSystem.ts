@@ -1,43 +1,38 @@
-import { FileSystem } from "@zenfs/core";
 import { configure } from "@zenfs/core";
 import fs from "@zenfs/core";
-import { useEffect, useState } from "react";
 
 import { Fetch, Overlay } from "@zenfs/core";
 import { IndexedDB } from "@zenfs/dom";
 import publicFileSystemIndex from "../../index.json";
 
 const useTestFileSystem = () => {
-  const [fileSys, setFileSys] = useState<FileSystem | null>(null);
-  useEffect(() => {
-    if (!fileSys) {
-      configure({
-        mounts: {
-          "/": {
-            backend: Overlay,
-            readable: {
-              backend: Fetch,
-              index: publicFileSystemIndex,
-            },
-            writable: {
-              backend: IndexedDB,
-              storeName: "fs-cache",
-            },
-          },
+  configure({
+    mounts: {
+      "/": {
+        backend: Overlay,
+        readable: {
+          backend: Fetch,
+          index: publicFileSystemIndex,
         },
-      });
-
-      fs.readFile("/desktop/test", (res) => {
-        console.log("READ");
-        console.log("RES: " + res);
-      });
-      fs.readFile("public/desktop/test", (res) => {
-        console.log("READ");
-        console.log("RES: " + res);
-      });
-    }
-  }, [fileSys]);
-  return { fileSys };
+        writable: {
+          backend: IndexedDB,
+          storeName: "fs-cache",
+        },
+      },
+    },
+  }).then(() => {
+    console.log("Finished configure");
+    fs.readFileSync("/desktop/test", (err, res) => {
+      console.log("READ");
+      console.log("RES: ", err);
+      console.log("RES: ", res);
+    });
+    fs.readFileSync("public/desktop/test", (err, res) => {
+      console.log("READ");
+      console.log("RES: ", err);
+      console.log("RES: ", res);
+    });
+  });
 };
 
 export default useTestFileSystem;

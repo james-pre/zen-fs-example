@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@zenfs/core": "^0.12.10",
-    "@zenfs/dom": "^0.2.12",
+    "@zenfs/dom": "github:zen-fs/dom",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18"
